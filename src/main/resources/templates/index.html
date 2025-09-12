@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>동네마켓</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+ <!-- Header -->
+   <div th:replace="/header :: header"></div>
+   
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🍁❄ 따뜻하게 거래하고 소통하는 동네 커뮤니티</h1>
+        <p>가을과 겨울의 포근함을 담은 우리 동네 마켓</p>
+    </section>
+
+    
+    <!-- Footer -->
+    <div th:replace="/footer :: footer"></div>
+</body>
+</html>

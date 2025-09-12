@@ -1,0 +1,117 @@
+@charset "UTF-8";
+/* 전체 스타일 초기화 */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, #FFF8F0, #F3F0EC); /* 가을~겨울 부드러운 배경 */
+    color: #3B2F2F;
+}
+
+/* Header */
+.header {
+    background-color: #6B4226; /* 가을~겨울 브라운톤 */
+    color: #FFF8F0;
+    padding: 15px 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between; /* 왼쪽 로고 / 오른쪽 메뉴 */
+    align-items: center;
+}
+
+.header .logo-button {
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: none;
+     color: #FFF8F0;
+    
+}
+
+.nav-menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #FFF8F0;
+    font-weight: 500;
+}
+
+.nav-menu a:hover {
+    color: #FBBF24; /* 따뜻한 포인트 컬러 */
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    background-color: #F3E8EE; /* 연한 핑크/살짝 겨울 느낌 */
+}
+
+.hero h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #5C4033;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    color: #7C4D3B;
+}
+
+/* Section */
+.section.container {
+    flex: 1;
+    padding: 40px 20px;
+}
+
+.grid {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    background-color: #FFF5EE; /* 가을 느낌 부드러운 배경 */
+    padding: 15px;
+    border-radius: 12px;
+    width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.title {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.price, .location {
+    font-size: 0.9rem;
+}
+
+/* Board List */
+.board-list {
+    list-style: none;
+    padding: 0;
+}
+
+.board-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid #E6D3C3;
+}
+
+/* Footer 고정 하단 */
+.footer {
+    background-color: #6B4226;
+    text-align: center;
+    padding: 20px 0;
+    color: #FFF8F0;
+    font-size: 0.9rem;
+    margin-top: auto;
+}

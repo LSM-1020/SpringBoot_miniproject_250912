@@ -106,12 +106,11 @@ html, body {
     border-bottom: 1px solid #E6D3C3;
 }
 
-/* Footer 고정 하단 */
 .footer {
     background-color: #6B4226;
     text-align: center;
     padding: 20px 0;
     color: #FFF8F0;
     font-size: 0.9rem;
-    margin-top: auto;
+    /* margin-top 제거 */
 }

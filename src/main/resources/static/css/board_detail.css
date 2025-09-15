@@ -1,6 +1,8 @@
 @charset "UTF-8";
 
-/* 상세 글 페이지 전체 섹션 */
+/* ================================
+   전체 글 상세 페이지
+   ================================ */
 .board-detail-section {
     padding: 60px 20px;
     background-color: #FDF6F0;
@@ -38,7 +40,7 @@
     font-size: 1rem;
     color: #3E2F1C;
     line-height: 1.6;
-    white-space: pre-wrap; /* 줄바꿈 유지 */
+    white-space: pre-wrap;
 }
 
 /* 추천/비추천 버튼 */
@@ -56,25 +58,12 @@
     transition: background 0.3s;
 }
 
-.vote-btn {
-    background-color: #A0522D;
-    color: #FFF8F0;
-}
+.vote-btn { background-color: #A0522D; color: #FFF8F0; }
+.vote-btn:hover { background-color: #6B4226; }
+.disvote-btn { background-color: #E6D5C0; color: #5C4033; }
+.disvote-btn:hover { background-color: #D8B4A6; }
 
-.vote-btn:hover {
-    background-color: #6B4226;
-}
-
-.disvote-btn {
-    background-color: #E6D5C0;
-    color: #5C4033;
-}
-
-.disvote-btn:hover {
-    background-color: #D8B4A6;
-}
-
-/* 수정/삭제/목록 버튼 */
+/* 글 수정/삭제/목록 버튼 */
 .board-actions {
     margin-top: 20px;
 }
@@ -90,46 +79,23 @@
     transition: background 0.3s;
 }
 
-/* 수정 버튼 */
-.edit-btn {
-    background-color: #A0522D;
-}
-.edit-btn:hover {
-    background-color: #6B4226;
-}
+.edit-btn { background-color: #A0522D; }
+.edit-btn:hover { background-color: #6B4226; }
+.delete-btn { background-color: #D9534F; }
+.delete-btn:hover { background-color: #B22222; }
+.list-btn { background-color: #008CBA; }
+.list-btn:hover { background-color: #006f95; }
 
-/* 삭제 버튼 */
-.delete-btn {
-    background-color: #D9534F;
-}
-.delete-btn:hover {
-    background-color: #B22222;
-}
-
-/* 목록 버튼 */
-.list-btn {
-    background-color: #008CBA;
-}
-.list-btn:hover {
-    background-color: #006f95;
-}
-
-/* 답변 수 표시 */
-.answer-count {
-    margin-top: 15px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #5C4033;
-}
-
-/* 답변 작성 폼 */
+/* ================================
+   답변 작성 폼
+   ================================ */
 .answer-form-section {
     margin-top: 30px;
 }
 
-.answer-form-section h3 {
-    color: #6B4226;
-    margin-bottom: 10px;
+.answer-form-section h3 { 
+    color: #6B4226; 
+    margin-bottom: 10px; 
 }
 
 .answer-form-section textarea {
@@ -154,15 +120,11 @@
     cursor: pointer;
 }
 
-.answer-form-section .submit-btn:hover {
-    background-color: #6B4226;
+.answer-form-section .submit-btn:hover { 
+    background-color: #6B4226; 
 }
 
 /* 답변 카드 */
-.answer-list-section {
-    margin-top: 30px;
-}
-
 .answer-card {
     background-color: #FFF4E6;
     border-radius: 10px;
@@ -171,25 +133,26 @@
     box-shadow: 0 1px 6px rgba(0,0,0,0.08);
 }
 
-.answer-meta span {
-    margin-right: 15px;
-    font-size: 0.85rem;
-    color: #5C4033;
+.answer-meta span { 
+    margin-right: 15px; 
+    font-size: 0.85rem; 
+    color: #5C4033; 
 }
 
-.answer-content {
-    margin-top: 8px;
-    font-size: 0.95rem;
-    color: #3E2F1C;
-    line-height: 1.5;
-    white-space: pre-wrap;
+.answer-content { 
+    margin-top: 8px; 
+    font-size: 0.95rem; 
+    color: #3E2F1C; 
+    line-height: 1.5; 
+    white-space: pre-wrap; 
 }
 
+/* 작성자 버튼 */
 .answer-actions {
     margin-top: 10px;
 }
 
-.answer-actions .edit-btn, 
+.answer-actions .edit-btn,
 .answer-actions .delete-btn {
     display: inline-block;
     padding: 6px 14px;
@@ -198,18 +161,64 @@
     font-weight: bold;
     text-decoration: none;
     color: #FFF8F0;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
-.answer-actions .edit-btn {
-    background-color: #A0522D;
+.answer-actions .edit-btn { background-color: #A0522D; }
+.answer-actions .edit-btn:hover { background-color: #6B4226; }
+.answer-actions .delete-btn { background-color: #D9534F; }
+.answer-actions .delete-btn:hover { background-color: #B22222; }
+
+/* 답변 수정폼 */
+.answer-edit-form {
+    margin-top: 10px;
 }
-.answer-actions .edit-btn:hover {
+
+.answer-edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #D8B4A6;
+    resize: vertical;
+    font-size: 1rem;
+    background-color: #FFF8F0;
+    color: #3E2F1C;
+    margin-bottom: 8px;
+}
+
+.answer-edit-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.answer-edit-actions .save-btn,
+.answer-edit-actions .cancel-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    color: #FFF8F0;
+    border: none;
+}
+
+.answer-edit-actions .save-btn {
     background-color: #6B4226;
 }
 
-.answer-actions .delete-btn {
-    background-color: #D9534F;
+.answer-edit-actions .save-btn:hover {
+    background-color: #A0522D;
 }
-.answer-actions .delete-btn:hover {
+
+.answer-edit-actions .cancel-btn {
+    background-color: #D9534F;
+    display: inline-block;
+    text-align: center;
+    line-height: normal;
+}
+
+.answer-edit-actions .cancel-btn:hover {
     background-color: #B22222;
 }

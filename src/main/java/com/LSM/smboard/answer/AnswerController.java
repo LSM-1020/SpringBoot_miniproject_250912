@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class AnswerController {
 	
 	@Autowired
 	private UserService userService;
+	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/create/{id}") //답변 등록 요청->오는 파라미터 값 : 부모 질문글의 번호
 	public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
@@ -40,40 +42,50 @@ public class AnswerController {
 		
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("board", board);
-			return "question_detail";
+			return "board_detail";
 		}
 		
 		Answer answer = answerService.create(board, answerForm.getContent(), siteUser); //DB에 답변 등록
 		
 		return String.format("redirect:/board/detail/%s#answer_%s", id, answer.getId());
 	}
-	
-	@PreAuthorize("isAuthenticated()")
+  @PreAuthorize("isAuthenticated()")
 	@GetMapping(value = "/modify/{id}") //답변을 수정할수있는 form으로 이동하는 요청
 	public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
-		Answer answer = answerService.getAnswer(id);
-		//글쓴 유저와 로그인한 유저의 동일 여부 재확인
-				if(!answer.getAuthor().getUsername().equals(principal.getName())) { //참이면 수정권한 없음
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다");
-				}
-		answerForm.setContent(answer.getContent());
-		
-				return "answer_form";
+	    Answer answer = answerService.getAnswer(id);
+	    // 작성자 확인
+	    if(!answer.getAuthor().getUsername().equals(principal.getName())) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다");
+	    }
+	    answerForm.setContent(answer.getContent());
+	    return String.format("redirect:/board/detail/%s#answer_%s", answer.getBoard().getId(), answer.getId());
 	}
+	
 	@PreAuthorize("isAuthenticated()")
-	@PostMapping(value = "/modify/{id}") //질문 수정하기위한 요청
-	public String answer(@Valid AnswerForm answerForm,BindingResult bindingResult, @PathVariable("id") Integer id, Principal principal) {
-		if(bindingResult.hasErrors()) {
-			return "answer_form";
-		}
-		Answer answer = answerService.getAnswer(id);//수정전 원본답변 엔티티
-		if(!answer.getAuthor().getUsername().equals(principal.getName())) { //참이면 수정권한 없음
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다");
-		}
-		answerService.modify(answer, answerForm.getContent()); //수정 완료
-		return String.format("redirect:/board/detail/%s", answer.getBoard().getId());
-		//redirect->부모글(해당 답변이 달린 질문글)의 번호로 이동
-	}
+    @PostMapping("/modify/{id}") // 답변 수정
+    public String modifyAnswer(@Valid AnswerForm answerForm,
+                              BindingResult bindingResult,
+                               @PathVariable("id") Integer id,
+                               Principal principal,
+                               Model model) {
+
+        Answer answer = answerService.getAnswer(id);
+
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
+        }
+
+        if (bindingResult.hasErrors()) {
+            Board board = answer.getBoard();
+            model.addAttribute("board", board);
+            model.addAttribute("answerForm", answerForm);
+            return "board_detail"; // 오류 시 상세 페이지로
+        }
+
+        answerService.modify(answer, answerForm.getContent());
+        return String.format("redirect:/board/detail/%s#answer_%s", answer.getBoard().getId(), answer.getId());
+    }
+	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping(value = "/delete/{id}") //질문 수정하기위한 요청
 	public String answerdelete(@PathVariable("id") Integer id, Principal principal) {

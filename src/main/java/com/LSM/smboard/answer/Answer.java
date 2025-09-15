@@ -18,6 +18,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,5 +65,14 @@ public class Answer {
 		@ManyToMany
 		Set<SiteUser> disvoter; //추천한 유저가 중복없이 여러명의 유저가 저장, 추천수
 		//set-> 중복 제거용 컬랙션
-	
-}
+		
+		
+		  // 인라인 편집용 플래그
+	    @Transient
+	    private boolean editMode = false;
+
+	    public boolean isEditMode() { return editMode; }
+	    public void setEditMode(boolean editMode) { this.editMode = editMode; }
+
+	    // 기존 getter/setter...
+	}

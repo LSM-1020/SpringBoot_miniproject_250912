@@ -44,7 +44,41 @@ public class BoardController {
 		
 	
 
-		@GetMapping(value = "/detail/{id}") //파라미터이름 없이 값만 넘어왔을때 처리
+//		@GetMapping(value = "/detail/{id}") //파라미터이름 없이 값만 넘어왔을때 처리
+//		public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
+//			boardService.hit(boardService.getBoard(id));//조회수 증가
+//			
+//			//service에 3을 넣어서 호출
+//			Board board = boardService.getBoard(id);
+//			model.addAttribute("board", board);
+//			return "board_detail"; //타임리프 html의 이름
+//		}
+//	    @GetMapping("/detail/{id}")
+//	    public String boardDetail(@PathVariable("id") Integer id,
+//	                              @RequestParam(value = "edit", required = false) Integer editAnswerId,
+//	                              Model model) {
+//
+//	        Board board = boardService.getBoard(id);
+//	        model.addAttribute("board", board);
+//
+//	        AnswerForm answerForm = new AnswerForm();
+//	        model.addAttribute("answerForm", answerForm);
+//
+//	        // 인라인 편집용 플래그 설정
+//	        if (editAnswerId != null) {
+//	            board.getAnswerList().forEach(answer -> {
+//	                if (answer.getId().equals(editAnswerId)) {
+//	                    answer.setEditMode(true); // 편집 모드 활성화
+//	                    answerForm.setContent(answer.getContent());
+//	                } else {
+//	                    answer.setEditMode(false);
+//	                }
+//	            });
+//	        }
+//
+//	        return "board_detail";
+//	    }
+	    @GetMapping(value = "/detail/{id}") //파라미터이름 없이 값만 넘어왔을때 처리
 		public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
 			boardService.hit(boardService.getBoard(id));//조회수 증가
 			
@@ -53,6 +87,9 @@ public class BoardController {
 			model.addAttribute("board", board);
 			return "board_detail"; //타임리프 html의 이름
 		}
+	    
+	    
+	    
 		@PreAuthorize("isAuthenticated()")
 		@GetMapping(value = "/create") //질문 등록 폼만 매핑해주는 메서드->GET
 		public String boardCreate(BoardForm boardForm) {
@@ -72,6 +109,7 @@ public class BoardController {
 			
 			return "redirect:/board/list"; //질문 리스트로 이동->반드시 redirect
 		}
+		
 		@GetMapping("/list")
 		public String list(Model model,
 		                   @RequestParam(value = "page", defaultValue = "0") int page,

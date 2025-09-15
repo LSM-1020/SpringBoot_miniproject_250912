@@ -42,21 +42,20 @@
         </div>
 
         
-		<!-- 질문 수정 버튼 -->
-		<div class="board-actions">
-             <a th:href="@{|/board/modify/${board.id}|}" 
-             class="edit-btn" sec:authorize="isAuthenticated()"
-             th:if="${board.author != null and board.author.username == #authentication.getPrincipal().getUsername()}"
-             th:text="수정">수정 버튼 이름 표시</a>
-             <!-- 질문 삭제 버튼 -->
-            <a href="javascript:void(0);" 
-		   class="delete-btn" 
-		   sec:authorize="isAuthenticated()"
-		   th:if="${board.author != null and board.author.username == #authentication.getPrincipal().getUsername()}"
-		   th:onclick="|if(confirm('정말 삭제하시겠습니까?')) window.location.href='/board/delete/${board.id}';|">삭제</a>
-		   <!-- 글 목록으로 버튼 -->
-			 <a th:href="@{/board/list}" class="list-btn">글 목록</a>
-			</div>
+					<!-- 질문 수정 버튼 -->
+					<div class="board-actions">
+	               <a th:href="@{|/board/modify/${board.id}|}" 
+	               class="edit-btn" sec:authorize="isAuthenticated()"
+	               th:if="${board.author != null and board.author.username == #authentication.getPrincipal().getUsername()}"
+	               th:text="수정">수정 버튼 이름 표시</a>
+	               <!-- 질문 삭제 버튼 -->
+	               <a href="javascript:void(0);" 
+					th:data-uri="@{|/board/delete/${board.id}|}" 
+					class="delete-btn" sec:authorize="isAuthenticated()"
+					th:if="${board.author != null and board.author.username == #authentication.getPrincipal().getUsername()}"
+					th:text="삭제" onclick="return confirm('정말 삭제하시겠습니까?');">삭제 버튼 이름 표시</a>
+					<a th:href="@{/board/list}" class="list-btn">글 목록</a>
+					</div>
 
 
         <!-- 답변 수 -->
@@ -87,9 +86,10 @@
 
                 <!-- 답변 수정/삭제 버튼 -->
                 <div class="answer-actions" th:if="${#authentication.name == answer.author.username}">
-                    <a th:href="@{|/answer/modify/${answer.id}|}" class="edit-btn">수정</a>
+                   <!-- <a th:href="@{|/answer/modify/${answer.id}|}" class="edit-btn">수정</a>-->
                     <a th:href="@{|/answer/delete/${answer.id}|}" class="delete-btn"
                        onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                       
                 </div>
             </div>
         </div>

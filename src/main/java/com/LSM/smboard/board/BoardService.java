@@ -63,18 +63,24 @@ public class BoardService {
 			int endRow = startRow + size;
 			
 			//검색어 없이 리스트 조회
-			List<Board> pageQuestionList = boardRepository.findBoardsWithPaging(startRow, endRow);
-			long totalQuestion = boardRepository.count(); //모든 글 갯수 가져오기
-			
-			//검색어로 검색결과 리스트 조회
-			List<Board> searchQuestionList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
-			int totalSearchQuestion = boardRepository.countSearchResult(kw);
-			
-			Page<Board> pagingList = new PageImpl<>(searchQuestionList, PageRequest.of(page, size), totalSearchQuestion);
-			
-			return pagingList;
-			
-		}
+			  List<Board> pageQuestionList;
+			    long totalQuestion;
+
+			    if (kw == null || kw.isEmpty()) {
+			        // 검색어 없이 전체 조회
+			        pageQuestionList = boardRepository.findBoardsWithPaging(startRow, endRow);
+			        totalQuestion = boardRepository.count(); // 모든 글 갯수
+			    } else {
+			        // 검색어로 검색
+			        pageQuestionList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
+			        totalQuestion = boardRepository.countSearchResult(kw);
+			    }
+
+			    // List → Page 변환
+			    Page<Board> pagingList = new PageImpl<>(pageQuestionList, PageRequest.of(page, size), totalQuestion);
+
+			    return pagingList;
+			}
 	public void modify(Board board,String subject, String content) {
 		
 		board.setContent(content);

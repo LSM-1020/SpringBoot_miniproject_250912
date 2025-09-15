@@ -48,47 +48,53 @@
                 </tr>
             </thead>
             <tbody>
-			<tr class="text-center" th:each="board, loop : ${paging.content}">
-    <td th:text="${paging.totalElements - (loop.index + (paging.number * paging.size))}"></td>
-    
-    <td class="text-start">
-        <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.subject}">제목</a>
-        <span class="text-danger small ms-2" th:if="${#lists.size(board.answerList) > 0}"
-            th:text="'['+${#lists.size(board.answerList)}+']'"></span>
-    </td>
-    
-    <td>
-        <span th:if="${board.author != null}" th:text="${board.author.username}">작성자</span>
-    </td>
-    
-    <td><span th:text="${board.hit}">조회수</span></td>
-    
-   <td th:text="${#temporals.format(board.createdate.atZone(T(java.time.ZoneId).of('UTC'))
-                                   .withZoneSameInstant(T(java.time.ZoneId).of('Asia/Seoul')),
-                                   'yyyy-MM-dd HH:mm')}">
-</td>
-</tr>
-
-		</tbody>
-        </table>
-
+    <tr class="text-center" th:each="board, loop : ${paging.content}"
+        th:with="seoulDate=${#temporals.format(
+                        board.createdate.atZone(T(java.time.ZoneId).of('UTC'))
+                        .withZoneSameInstant(T(java.time.ZoneId).of('Asia/Seoul')),
+                        'yyyy-MM-dd HH:mm')}">
         
+        <!-- 글 번호 -->
+        <td th:text="${paging.totalElements - (loop.index + (paging.number * paging.size))}"></td>
+        
+        <!-- 제목 + 답변 수 -->
+        <td class="text-start">
+            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.subject}">제목</a>
+            <span class="text-danger small ms-2" 
+                  th:if="${board.answerList != null and #lists.size(board.answerList) > 0}"
+                  th:text="'[' + ${#lists.size(board.answerList)} + ']'"></span>
+        </td>
+        
+        <!-- 작성자 -->
+        <td>
+            <span th:if="${board.author != null}" th:text="${board.author.username}">작성자</span>
+           
+        </td>
+        
+        <!-- 조회수 -->
+        <td th:text="${board.hit}">조회수</td>
+        
+        <!-- 작성일 -->
+        <td th:text="${seoulDate}">작성일</td>
+    </tr>
+</tbody>
+        </table>       
 
-        <!-- 페이징 -->
-        <div class="board-pagination">
-            <ul>
-                <li th:if="${paging.hasPrevious()}">
-                    <a th:href="@{/board/list(page=${paging.number-1}, kw=${kw})}">이전</a>
-                </li>
-                <li th:each="i : ${#numbers.sequence(0, paging.totalPages-1)}"
-                    th:classappend="${i==paging.number}? 'active'">
-                    <a th:href="@{/board/list(page=${i}, kw=${kw})}" th:text="${i+1}"></a>
-                </li>
-                <li th:if="${paging.hasNext()}">
-                    <a th:href="@{/board/list(page=${paging.number+1}, kw=${kw})}">다음</a>
-                </li>
-            </ul>
-        </div>
+      <!-- 페이징 -->
+<div class="board-pagination">
+    <ul>
+        <li th:if="${paging.hasPrevious()}">
+            <a th:href="@{/board/list(page=${paging.number-1}, kw=${kw})}">이전</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(0, paging.totalPages-1)}"
+            th:classappend="${i == paging.number} ? 'active'">
+            <a th:href="@{/board/list(page=${i}, kw=${kw})}" th:text="${i + 1}"></a>
+        </li>
+        <li th:if="${paging.hasNext()}">
+            <a th:href="@{/board/list(page=${paging.number+1}, kw=${kw})}">다음</a>
+        </li>
+    </ul>
+</div>
 
     </div>
 </section>

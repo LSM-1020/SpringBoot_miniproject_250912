@@ -1,23 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>동네마켓</title>
- <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body>
-<!-- Header -->
-   <header class="header">
+<html xmlns:th="http://www.thymeleaf.org">
+<header class="header">
     <div class="container header-inner">
-         <a href="/" class="logo-button">동네마켓</a>
+        <a href="/" class="logo-button">동네마켓</a>
         <nav class="nav-menu">
-            <a href="/login">로그인</a>
-            <a href="/signup">회원가입</a>
-            <a href="/market">중고거래</a>
-            <a href="/board">자유게시판</a>
+
+            <!-- 로그인한 사용자 -->
+            <span th:if="${username != null}">
+                <b th:text="${username}"></b>님 환영합니다
+                <a th:href="@{/user/logout}">로그아웃</a>
+                <a href="/market">중고거래</a>
+                <a th:href="@{/board/list}">자유게시판</a>
+            </span>
+
+            <!-- 로그인하지 않은 사용자 -->
+            <span th:if="${username == null}">
+                <a th:href="@{/user/login}">로그인</a>
+                <a th:href="@{/user/signup}">회원가입</a>
+                <a href="/market">중고거래</a>
+                <a th:href="@{/board/list}">자유게시판</a>
+            </span>
+
         </nav>
     </div>
 </header>
-
-</body>
 </html>

@@ -14,7 +14,12 @@
         <h1>🍁❄ 따뜻하게 거래하고 소통하는 동네 커뮤니티</h1>
         <p>가을과 겨울의 포근함을 담은 우리 동네 마켓</p>
     </section>
-
+	<!-- 로그아웃 메시지 -->
+	<div th:if="${param.logout}">
+        <script>
+            alert('로그아웃 되었습니다.');
+        </script>
+    </div>
     
     <!-- Footer -->
     <div th:replace="/footer :: footer"></div>

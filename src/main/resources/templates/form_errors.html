@@ -1,0 +1,4 @@
+<div th:fragment="formErrorsFragment" class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+			<div th:each="err : ${#fields.allErrors()}" th:text="${err}">에러원인</div>
+			<!-- 에러가 있다면 여러개일수 있으니 each로 반복하게 만들고 text로 err표시해준다  -->
+		</div>

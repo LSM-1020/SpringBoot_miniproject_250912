@@ -1,0 +1,100 @@
+@charset "UTF-8";
+
+/* 글쓰기/수정 섹션 전체 */
+.board-section {
+    padding: 60px 20px;
+    background-color: #FDF6F0; /* 가을 느낌의 따뜻한 배경 */
+    min-height: 80vh;
+}
+
+.board-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #FFF8F0;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.board-container h2 {
+    font-size: 2rem;
+    color: #6B4226; /* 가을 브라운톤 */
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* 입력폼 그룹 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #5C4033;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #D8B4A6;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: #FFF8F0;
+    color: #3E2F1C;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* 에러 메시지 */
+.error-msg {
+    color: #D9534F;
+    margin-top: 4px;
+    font-size: 0.9rem;
+}
+
+/* 버튼 그룹 */
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.submit-btn,
+.cancel-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    border: none;
+}
+
+/* 저장 버튼 */
+.submit-btn {
+    background-color: #A0522D;
+    color: #FFF8F0;
+}
+
+.submit-btn:hover {
+    background-color: #6B4226;
+}
+
+/* 취소 버튼 */
+.cancel-btn {
+    background-color: #E6D5C0;
+    color: #5C4033;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.cancel-btn:hover {
+    background-color: #D8B4A6;
+}

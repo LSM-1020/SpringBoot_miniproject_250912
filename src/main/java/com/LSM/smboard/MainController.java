@@ -1,14 +1,20 @@
 package com.LSM.smboard;
 
+import java.security.Principal;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainController {
 
-	@GetMapping(value = "/") //오라클 root 요청 처리
-	//@GetMapping(value = "/") // 로컬용 root 요청 처리
-	public String root() {
-		return "index";
+	@GetMapping("/")
+	public String index(Model model, Principal principal) {
+	    if (principal != null) {
+	        model.addAttribute("username", principal.getName());
+	    }
+	    return "index";
 	}
+ 
 }

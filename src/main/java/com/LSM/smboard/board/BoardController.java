@@ -114,16 +114,38 @@ public class BoardController {
 		public String list(Model model,
 		                   @RequestParam(value = "page", defaultValue = "0") int page,
 		                   @RequestParam(value = "kw", defaultValue = "") String kw) {
-			int pageSize = 10;
-			
-			Page<Board> paging = boardService.getPageQuestions(page,kw);
-			//게시글 10개씩 자른 리스트->페이지당 10개->2페이지에 해당하는 글 10개 
-			model.addAttribute("paging", paging);
-			model.addAttribute("kw", kw);
-			
-			return "board_list";
+
+		    int pageSize = 10;          // 한 페이지 글 수
+		    int displayPageCount = 10;   // 한 그룹에 표시할 페이지 수
+
+		    Page<Board> paging = boardService.getPageBoards(page, kw);
+
+		    int totalPages = paging.getTotalPages();
+
+		 // 현재 페이지 그룹 계산
+		    int currentGroup = page / displayPageCount;      
+		    int startPage = currentGroup * displayPageCount; 
+		    int endPage = Math.min(startPage + displayPageCount - 1, totalPages - 1);
+
+		    // 이전/다음 그룹 이동용 페이지 번호
+		    int prevGroupPage = Math.max(startPage - 1, 0);                  
+		    int nextGroupPage = Math.min(endPage + 1, totalPages - 1);       
+
+		    // 처음과 마지막 페이지
+		    int firstPage = 0;
+		    int lastPage = totalPages - 1;
+
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("kw", kw);
+		    model.addAttribute("startPage", startPage);
+		    model.addAttribute("endPage", endPage);
+		    model.addAttribute("prevGroupPage", prevGroupPage);
+		    model.addAttribute("nextGroupPage", nextGroupPage);
+		    model.addAttribute("firstPage", firstPage);
+		    model.addAttribute("lastPage", lastPage);
+
+		    return "board_list";
 		}
-			
 		
 		@PreAuthorize("isAuthenticated()")
 		@GetMapping(value="/modify/{id}")

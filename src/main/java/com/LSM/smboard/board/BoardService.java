@@ -53,33 +53,26 @@ public class BoardService {
 		
 	}
 	
-	//페이징 테스트
-		public Page<Board> getPageQuestions(int page, String kw) {
-			
-			//Specification<Question> spec = search(kw);
-			int size = 10; //1페이지당 10개씩 글 출력
-			
-			int startRow = page * size;
-			int endRow = startRow + size;
-			
-			//검색어 없이 리스트 조회
-			  List<Board> pageQuestionList;
-			    long totalQuestion;
+	// 페이징 + 검색
+    public Page<Board> getPageBoards(int page, String kw) {
+        int size = 10; // 한 페이지당 글 개수
+        int startRow = page * size;
+        int endRow = startRow + size;
 
-			    if (kw == null || kw.isEmpty()) {
-			        // 검색어 없이 전체 조회
-			        pageQuestionList = boardRepository.findBoardsWithPaging(startRow, endRow);
-			        totalQuestion = boardRepository.count(); // 모든 글 갯수
-			    } else {
-			        // 검색어로 검색
-			        pageQuestionList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
-			        totalQuestion = boardRepository.countSearchResult(kw);
-			    }
+        List<Board> boardList;
+        long total;
 
-			    // List → Page 변환
-			    Page<Board> pagingList = new PageImpl<>(pageQuestionList, PageRequest.of(page, size), totalQuestion);
+        if (kw == null || kw.isEmpty()) {
+            // 검색어 없으면 전체 게시글
+            boardList = boardRepository.findBoardsWithPaging(startRow, endRow);
+            total = boardRepository.count();
+        } else {
+            // 검색어 있는 경우
+            boardList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
+            total = boardRepository.countSearchResult(kw);
+        }
 
-			    return pagingList;
+        return new PageImpl<>(boardList, PageRequest.of(page, size), total);
 			}
 	public void modify(Board board,String subject, String content) {
 		

@@ -80,18 +80,32 @@
 </tbody>
         </table>       
 
-      <!-- 페이징 -->
-<div class="board-pagination">
+ <div class="board-pagination">
     <ul>
-        <li th:if="${paging.hasPrevious()}">
-            <a th:href="@{/board/list(page=${paging.number-1}, kw=${kw})}">이전</a>
+        <!-- 처음으로 -->
+        <li th:if="${paging.number > 0}">
+            <a th:href="@{/board/list(page=${firstPage}, kw=${kw})}">처음으로</a>
         </li>
-        <li th:each="i : ${#numbers.sequence(0, paging.totalPages-1)}"
+
+        <!-- 이전 그룹 -->
+        <li th:if="${startPage > 0}">
+            <a th:href="@{/board/list(page=${prevGroupPage}, kw=${kw})}">이전</a>
+        </li>
+
+        <!-- 페이지 번호 5개 -->
+        <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${i == paging.number} ? 'active'">
             <a th:href="@{/board/list(page=${i}, kw=${kw})}" th:text="${i + 1}"></a>
         </li>
-        <li th:if="${paging.hasNext()}">
-            <a th:href="@{/board/list(page=${paging.number+1}, kw=${kw})}">다음</a>
+
+        <!-- 다음 그룹 -->
+        <li th:if="${endPage < paging.totalPages - 1}">
+            <a th:href="@{/board/list(page=${nextGroupPage}, kw=${kw})}">다음</a>
+        </li>
+
+        <!-- 끝으로 -->
+        <li th:if="${paging.number < lastPage}">
+            <a th:href="@{/board/list(page=${lastPage}, kw=${kw})}">끝으로</a>
         </li>
     </ul>
 </div>
@@ -99,8 +113,8 @@
     </div>
 </section>
 
-<!-- Footer 불러오기 -->
-<div th:replace="/footer :: footer"></div>
+<!-- Footer 불러오기 
+<div th:replace="/footer :: footer"></div> -->
 
 </body>
 </html>

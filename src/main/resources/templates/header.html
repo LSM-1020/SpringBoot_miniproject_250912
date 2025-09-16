@@ -8,7 +8,7 @@
             <span th:if="${username != null}">
                 <b th:text="${username}"></b>님 환영합니다
                 <a th:href="@{/user/logout}">로그아웃</a>
-                <a href="/market">중고거래</a>
+                <a th:href="@{/reservation/list}">중고거래</a>
                 <a th:href="@{/board/list}">자유게시판</a>
             </span>
 
@@ -16,7 +16,7 @@
             <span th:if="${username == null}">
                 <a th:href="@{/user/login}">로그인</a>
                 <a th:href="@{/user/signup}">회원가입</a>
-                <a href="/market">중고거래</a>
+                <a th:href="@{/reservation/list}">중고거래</a>
                 <a th:href="@{/board/list}">자유게시판</a>
             </span>
 

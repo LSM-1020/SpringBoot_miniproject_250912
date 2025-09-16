@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 
 import com.LSM.smboard.board.Board;
+import com.LSM.smboard.reservation.Reservation;
 import com.LSM.smboard.user.SiteUser;
 
 import jakarta.persistence.Column;
@@ -49,6 +50,10 @@ public class Answer {
 	//N:1 관계 -> 답변들:질문 -> @ManyToOne
 	@ManyToOne
 	private Board board;
+	
+	//N:1 관계 -> 답변들:질문 -> @ManyToOne
+	@ManyToOne
+	private Reservation reservation;
 	
 	//N:1 관계 -> 답변들:작성자 -> @ManyToOne
 	@ManyToOne

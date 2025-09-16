@@ -34,6 +34,8 @@ public class AnswerController {
 	@Autowired
 	private UserService userService;
 	
+	
+	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/create/{id}") //답변 등록 요청->오는 파라미터 값 : 부모 질문글의 번호
 	public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {

@@ -5,10 +5,15 @@ html, body {
     padding: 0;
     height: 100%;
     font-family: 'Noto Sans KR', sans-serif;
-    display: flex;
-    flex-direction: column;
     background: linear-gradient(to bottom, #FFF8F0, #F3F0EC); /* 가을~겨울 부드러운 배경 */
     color: #3B2F2F;
+}
+
+/* Flex 레이아웃으로 최소 높이 확보 */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 화면 전체 높이 확보 */
 }
 
 /* Header */
@@ -29,8 +34,7 @@ html, body {
     font-size: 2rem;
     font-weight: bold;
     text-decoration: none;
-     color: #FFF8F0;
-    
+    color: #FFF8F0;
 }
 
 .nav-menu a {
@@ -42,6 +46,14 @@ html, body {
 
 .nav-menu a:hover {
     color: #FBBF24; /* 따뜻한 포인트 컬러 */
+}
+
+/* Main content 영역 */
+.main {
+    flex: 1;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Hero Section */
@@ -64,7 +76,6 @@ html, body {
 
 /* Section */
 .section.container {
-    flex: 1;
     padding: 40px 20px;
 }
 
@@ -95,22 +106,36 @@ html, body {
     font-size: 0.9rem;
 }
 
-/* Board List */
-.board-list {
-    list-style: none;
-    padding: 0;
+/* Board List + 페이징 영역 */
+.board-section {
+    flex: 1; /* 콘텐츠가 늘어나면 푸터 밀어냄 */
+    margin-bottom: 60px; /* 푸터 높이만큼 여유 공간 확보 */
 }
 
-.board-list li {
-    padding: 12px 0;
-    border-bottom: 1px solid #E6D3C3;
+/* Board Pagination */
+.board-pagination {
+    margin-top: auto; /* 가능하면 하단에 위치 */
+    margin-bottom: 20px; /* 푸터와 충분한 여백 */
 }
 
+.board-pagination li a {
+    text-decoration: none;
+    color: #6B4226;
+    padding: 5px 10px;
+    border: 1px solid #6B4226;
+    border-radius: 4px;
+}
+
+.board-pagination li.active a {
+    background-color: #6B4226;
+    color: #FFF8F0;
+}
+
+/* Footer */
 .footer {
     background-color: #6B4226;
     text-align: center;
     padding: 20px 0;
     color: #FFF8F0;
     font-size: 0.9rem;
-    /* margin-top 제거 */
 }

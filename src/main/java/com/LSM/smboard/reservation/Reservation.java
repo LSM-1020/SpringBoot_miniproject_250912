@@ -1,20 +1,28 @@
 package com.LSM.smboard.reservation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.LSM.smboard.answer.Answer;
 import com.LSM.smboard.user.SiteUser;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -35,8 +43,11 @@ import lombok.Setter;
 		name = "RESERVATION_SEQ_GENERATOR",//JPA 내부 시퀀스 이름
 		sequenceName = "RESERVATION_SEQ", //실제 DB 시퀀스 이름
 		initialValue = 1, //시퀀스 시작값
+		
+		
 		allocationSize = 1 //시퀀스 증가치
 		)
+@EntityListeners(AuditingEntityListener.class)
 public class Reservation {
 	
 	@Id
@@ -71,9 +82,23 @@ public class Reservation {
 	//N:N관계 질문:추천자 
 	@ManyToMany
 	Set<SiteUser> disvoter; //추천한 유저가 중복없이 여러명의 유저가 저장, 추천수
-	//set-> 중복 제거용 컬랙션
+	//set-> 중복 제거용 컬랙션MultipartFile
 	
 	
 	private Integer hit=0; //질문글 조회수
+	
+	// 날짜 필드 추가
+    private LocalDate reserveDate;
+    private LocalTime reserveTime;
+    
+    private int price; 
+    
+    private String location; 
+    
+
+	
+    private Integer completed; // 거래 완료 여부, 기본값 false
+    
+    
 }
 

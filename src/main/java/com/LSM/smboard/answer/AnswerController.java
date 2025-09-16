@@ -17,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.LSM.smboard.board.Board;
 import com.LSM.smboard.board.BoardService;
+import com.LSM.smboard.reservation.Reservation;
+import com.LSM.smboard.reservation.ReservationService;
 import com.LSM.smboard.user.SiteUser;
 import com.LSM.smboard.user.UserService;
 
@@ -33,6 +35,7 @@ public class AnswerController {
 	
 	@Autowired
 	private UserService userService;
+	
 	
 	
 	

@@ -3,38 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>중고거래 - 동네마켓</title>
-    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <link rel="stylesheet" th:href="@{/css/board_list_market.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<!-- Header 불러오기 -->
+<!-- Header -->
 <div th:replace="/header :: header"></div>
 
-<!-- 자유게시판 메인 섹션 -->
 <section class="board-section">
     <div class="container board-container">
         <h2>💬 중고거래 게시판</h2>
-       <!-- 검색 & 글쓰기 영역 -->
-<div class="board-top">
-   <!-- 검색 영역 -->
-<div class="board-search">
-    <form th:action="@{/reservation/list}" method="get">
-        <select name="field">
-            <option value="subject" th:selected="${field=='subject'}">제목</option>
-            <option value="content" th:selected="${field=='content'}">내용</option>
-            <option value="author" th:selected="${field=='author'}">글쓴이</option>
-        </select>
-        <input type="text" name="kw" th:value="${kw}" placeholder="검색어를 입력하세요">
-        <button type="submit">검색</button>
-    </form>
-</div>
 
-    <!-- 글쓰기 버튼 -->
-    <div class="write-btn">
-        <a th:href="@{/reservation/create}">글쓰기</a>
-    </div>
-</div>
+        <!-- 검색 & 글쓰기 -->
+        <div class="board-top">
+            <div class="board-search">
+                <form th:action="@{/reservation/list}" method="get">
+                    <select name="field">
+                        <option value="subject" th:selected="${field=='subject'}">제목</option>
+                        <option value="content" th:selected="${field=='content'}">내용</option>
+                        <option value="author" th:selected="${field=='author'}">글쓴이</option>
+                    </select>
+                    <input type="text" name="kw" th:value="${kw}" placeholder="검색어를 입력하세요">
+                    <button type="submit">검색</button>
+                </form>
+            </div>
+
+            <div class="write-btn">
+                <a th:href="@{/reservation/create}">글쓰기</a>
+            </div>
+        </div>
 
         <!-- 게시글 리스트 -->
         <table class="board-table">
@@ -43,77 +41,71 @@
                     <th>번호</th>
                     <th>제목</th>
                     <th>작성자</th>
+                    <th>예약시간</th>
                     <th>조회수</th>
                     <th>작성일</th>
                 </tr>
             </thead>
             <tbody>
-    <tr class="text-center" th:each="reservation, loop : ${paging.content}"
-        th:with="seoulDate=${#temporals.format(
-                        reservation.createdate.atZone(T(java.time.ZoneId).of('UTC'))
-                        .withZoneSameInstant(T(java.time.ZoneId).of('Asia/Seoul')),
-                        'yyyy-MM-dd HH:mm')}">
-        
-        <!-- 글 번호 -->
-        <td th:text="${paging.totalElements - (loop.index + (paging.number * paging.size))}"></td>
-        
-        <!-- 제목 + 답변 수 -->
-        <td class="text-start">
-            <a th:href="@{|/reservation/detail/${reservation.id}|}" th:text="${reservation.subject}">제목</a>
-            <span class="text-danger small ms-2" 
-                  th:if="${reservation.answerList != null and #lists.size(reservation.answerList) > 0}"
-                  th:text="'[' + ${#lists.size(reservation.answerList)} + ']'"></span>
-        </td>
-        
-        <!-- 작성자 -->
-        <td>
-            <span th:if="${reservation.author != null}" th:text="${reservation.author.username}">작성자</span>
-           
-        </td>
-        
-        <!-- 조회수 -->
-        <td th:text="${reservation.hit}">조회수</td>
-        
-        <!-- 작성일 -->
-        <td th:text="${seoulDate}">작성일</td>
-    </tr>
-</tbody>
-        </table>       
+                <tr th:each="reservation, loop : ${paging.content}"
+    th:with="seoulDate=${reservation.createdate != null ? 
+        #temporals.format(
+            reservation.createdate.atZone(T(java.time.ZoneId).of('UTC'))
+                .withZoneSameInstant(T(java.time.ZoneId).of('Asia/Seoul')),
+            'yyyy-MM-dd HH:mm'
+        ) : '날짜 없음'}">
+                    
+                    <!-- 글 번호 -->
+                    <td th:text="${paging.totalElements - (loop.index + (paging.number * paging.size))}"></td>
 
- <div class="board-pagination">
-    <ul>
-        <!-- 처음으로 -->
-        <li th:if="${paging.number > 0}">
-            <a th:href="@{/reservation/list(page=${firstPage}, field=${field}, kw=${kw})}">처음으로</a>
-        </li>
+                    
 
-        <!-- 이전 그룹 -->
-        <li th:if="${startPage > 0}">
-            <a th:href="@{/reservation/list(page=${prevGroupPage}, field=${field}, kw=${kw})}">이전</a>
-        </li>
+                    <!-- 제목 + 답변 수 -->
+                    <td class="text-start">
+                        <a th:href="@{|/reservation/detail/${reservation.id}|}" th:text="${reservation.subject}">제목</a>
+                       
+                    </td>
 
-        <!-- 페이지 번호 5개 -->
-        <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
-            th:classappend="${i == paging.number} ? 'active'">
-            <a th:href="@{/reservation/list(page=${i}, field=${field}, kw=${kw})}" th:text="${i + 1}"></a>
-        </li>
+                    <!-- 작성자 -->
+                    <td th:text="${reservation.author.username}">작성자</td>
 
-        <!-- 다음 그룹 -->
-        <li th:if="${endPage < paging.totalPages - 1}">
-            <a th:href="@{/reservation/list(page=${nextGroupPage}, field=${field}, kw=${kw})}">다음</a>
-        </li>
+                    <!-- 예약 시간 -->
+                    <td th:text="${reservation.reserveDate} + ' ' + ${reservation.reserveTime}">예약시간</td>
 
-        <!-- 끝으로 -->
-        <li th:if="${paging.number < lastPage}">
-            <a th:href="@{/reservation/list(page=${lastPage}, field=${field}, kw=${kw})}">끝으로</a>
-        </li>
-    </ul>
-</div>
+                    <!-- 조회수 -->
+                    <td th:text="${reservation.hit}">조회수</td>
+
+                    <!-- 작성일 -->
+                    <td th:text="${seoulDate}">작성일</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 -->
+        <div class="board-pagination">
+            <ul>
+                <li th:if="${paging.number > 0}">
+                    <a th:href="@{/reservation/list(page=${firstPage}, field=${field}, kw=${kw})}">처음으로</a>
+                </li>
+                <li th:if="${startPage > 0}">
+                    <a th:href="@{/reservation/list(page=${prevGroupPage}, field=${field}, kw=${kw})}">이전</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${i == paging.number} ? 'active'">
+                    <a th:href="@{/reservation/list(page=${i}, field=${field}, kw=${kw})}" th:text="${i + 1}"></a>
+                </li>
+                <li th:if="${endPage < paging.totalPages - 1}">
+                    <a th:href="@{/reservation/list(page=${nextGroupPage}, field=${field}, kw=${kw})}">다음</a>
+                </li>
+                <li th:if="${paging.number < lastPage}">
+                    <a th:href="@{/reservation/list(page=${lastPage}, field=${field}, kw=${kw})}">끝으로</a>
+                </li>
+            </ul>
+        </div>
 
     </div>
 </section>
 
-<!-- Footer 불러오기 -->
+<!-- Footer -->
 <div th:replace="/footer :: footer"></div>
 
 </body>

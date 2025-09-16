@@ -1,14 +1,24 @@
 package com.LSM.smboard.reservation;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service; 
+import org.springframework.stereotype.Service;
+
 
 import com.LSM.smboard.DataNotFoundException;
 import com.LSM.smboard.answer.Answer;
@@ -26,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
+	
 	//@requiredArgsconstructor에 의해 생성자 방식으로 주입된 questionRepository (final필드만 가능)
 	
 	public List<Reservation> getlist() {//모든 질문글 가져오기->페이징
@@ -41,15 +52,22 @@ public class ReservationService {
 		}
 	}
 	
-	public void create(String subject, String content, SiteUser author) {
-		Reservation reservation = new Reservation();
-		reservation.setSubject(subject);
-		reservation.setContent(content);
-		reservation.setCreatedate(LocalDateTime.now());
-		reservation.setAuthor(author);
-		reservationRepository.save(reservation);
-		
-	}
+	public Reservation create(String subject, String content, SiteUser author, LocalDate reserveDate, LocalTime reserveTime,
+            int price, String location) {
+
+Reservation reservation = new Reservation();
+reservation.setSubject(subject);
+reservation.setContent(content);
+reservation.setAuthor(author);
+reservation.setCreatedate(LocalDateTime.now()); // 생성일
+reservation.setReserveDate(reserveDate);
+reservation.setReserveTime(reserveTime);
+
+reservation.setPrice(price);          // 추가
+reservation.setLocation(location);    // 추가
+return reservationRepository.save(reservation);
+    }
+
 	
 	// 페이징 + 검색 (field 구분)
 	public Page<Reservation> getPageBoards(int page, String field, String kw) {
@@ -112,13 +130,21 @@ public class ReservationService {
 	    return new PageImpl<>(reservateion, PageRequest.of(page, size), total);
 	}
 
-	public void modify(Reservation reservation,String subject, String content) {
-		
-		reservation.setContent(content);
-		reservation.setSubject(subject);
-		reservation.setModifydate(LocalDateTime.now());
-		reservationRepository.save(reservation);
-	}
+	public void modify(Reservation reservation, String subject, String content,
+			            LocalDate reserveDate, LocalTime reserveTime,
+			            Integer price, String location) {
+			reservation.setSubject(subject);
+			reservation.setContent(content);
+			reservation.setReserveDate(reserveDate);
+			reservation.setReserveTime(reserveTime);
+			
+			reservation.setPrice(price);
+			reservation.setLocation(location);
+			reservation.setModifydate(LocalDateTime.now());
+			
+			// 기존 글을 업데이트
+			reservationRepository.save(reservation);
+			}
 	public void delete(Reservation reservation) {
 		reservationRepository.delete(reservation);
 	}

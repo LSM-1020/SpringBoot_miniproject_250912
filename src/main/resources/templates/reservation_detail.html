@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>글 상세 - 동네마켓</title>
-    <link rel="stylesheet" th:href="@{/css/board_detail.css}">
-     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>상품 상세 - 동네마켓</title>
+    <link rel="stylesheet" th:href="@{/css/board_detail_market.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/reservation_vote.js}"></script>
 </head>
 <body>
@@ -14,9 +14,10 @@
 
 <section class="board-detail-section">
     <div class="board-detail-container">
+        
         <!-- 글 정보 -->
         <div class="board-header">
-            <h2 th:text="${reservation.subject}">글 제목</h2>
+            <h2 th:text="${reservation.subject}">상품 제목</h2>
             <div class="board-meta">
                 <span>작성자: <b th:text="${reservation.author.username}">작성자</b></span>
                 <span>등록일: <span th:text="${#temporals.format(reservation.createdate,'yyyy-MM-dd HH:mm')}"></span></span>
@@ -24,70 +25,53 @@
             </div>
         </div>
 
-        <!-- 글 내용 -->
-        <div class="board-content" th:text="${reservation.content}">
-            글 내용
-        </div>
+      
+        <div class="board-content">
+    <p th:text="${reservation.content}">상품 설명</p>
+    <p>가격: <span th:text="${reservation.price}+'원'">0원</span></p>
+    <p>거래 위치: <span th:text="${reservation.location}">서울</span></p>
+    <p>예약 일자: <span th:text="${reservation.reserveDate}+'-'+${reservation.reserveTime}">날짜</span></p>
+	</div>
 
-        <!-- 추천 / 비추천 -->
-        <div class="board-vote">
-            <button class="vote-btn" 
-                    th:onclick="'location.href=\'/reservation/vote/'+${reservation.id}+'\''">
-                👍 찜하기 (<span th:text="${#lists.size(reservation.voter)}">0</span>)
+      <!-- 찜하기 / 예약 관련 버튼 -->
+<div class="board-actions">
+
+    <!-- 로그인한 사용자일 때 -->
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+
+        <!-- 찜하기 버튼: 로그인한 누구에게나 표시 -->
+        <button class="vote-btn"
+                th:onclick="'location.href=\'/reservation/vote/'+${reservation.id}+'\''">
+            👍 찜하기 (<span th:text="${#lists.size(reservation.voter)}">0</span>)
+        </button>
+
+        <!-- 글 작성자 본인일 때만 표시 -->
+        <th:block th:if="${#authentication.principal != null and reservation.author.username == #authentication.principal.username}">
+            <button class="complete-btn"
+                    th:onclick="'location.href=\'/reservation/complete/'+${reservation.id}+'\''">
+                ✅ 거래 완료
             </button>
-            
-        </div>
-					<!-- 질문 수정 버튼 -->
-					<div class="board-actions">
-	               <a th:href="@{|/reservation/modify/${reservation.id}|}" 
-	               class="edit-btn" sec:authorize="isAuthenticated()"
-	               th:if="${reservation.author != null and reservation.author.username == #authentication.getPrincipal().getUsername()}"
-	               th:text="수정">수정 버튼 이름 표시</a>
-	               <!-- 질문 삭제 버튼 -->
-	              <a th:href="@{|/reservation/delete/${reservation.id}|}" 
-				   class="delete-btn"
-				   sec:authorize="isAuthenticated()"
-				   th:if="${reservation.author != null and reservation.author.username == #authentication.getPrincipal().getUsername()}"
-				   onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-					<a th:href="@{/reservation/list}" class="list-btn">글 목록</a>
-					</div>
+
+            <button class="edit-btn"
+                    th:onclick="'location.href=\'/reservation/modify/'+${reservation.id}+'\''">
+                ✏️ 수정하기
+            </button>
+
+            <button class="delete-btn"
+                    th:onclick="'if(confirm(\'정말 삭제하시겠습니까?\')) location.href=\'/reservation/delete/'+${reservation.id}+'\''">
+                🗑️ 삭제
+            </button>
+        </th:block>
+
+    </th:block>
+
+    <!-- 글 목록 버튼 (모든 사용자 가능) -->
+    <a th:href="@{/reservation/list}" class="list-btn">글 목록</a>
+</div>
 
 
-        <!-- 답변 수 -->
-        <div class="answer-count">
-            답변 <span th:text="${#lists.size(reservation.answerList)}">0</span>개
-        </div>
 
-        <!-- 답변 작성 폼 -->
-        <div class="answer-form-section" th:if="${#authentication.name != null}">
-            <h3>💬 답변 작성</h3>
-            <form th:object="${answerForm}" th:action="@{|/answer/create/${reservation.id}|}" method="post">
-                <textarea th:field="*{content}" rows="4" placeholder="답변을 작성하세요"></textarea>
-                <div class="error-msg" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
-                <button type="submit" class="submit-btn">답변 등록</button>
-            </form>
-        </div>
-
-        <!-- 답변 리스트 -->
-        <div class="answer-list-section" th:if="${#lists.size(reservation.answerList) > 0}">
-            <h3>💡 답변 목록</h3>
-            <div th:each="answer : ${reservation.answerList}" class="answer-card">
-                <div class="answer-meta">
-                    <span>작성자: <b th:text="${answer.author.username}"></b></span>
-                    <span>작성일: <span th:text="${#temporals.format(answer.createdate,'yyyy-MM-dd HH:mm')}"></span></span>
-                    <span th:if="${answer.modifydate != null}">수정일: <span th:text="${#temporals.format(answer.modifydate,'yyyy-MM-dd HH:mm')}"></span></span>
-                </div>
-                <div class="answer-content" th:text="${answer.content}">답변 내용</div>
-
-                <!-- 답변 수정/삭제 버튼 -->
-                <div class="answer-actions" th:if="${#authentication.name == answer.author.username}">
-                   <!-- <a th:href="@{|/answer/modify/${answer.id}|}" class="edit-btn">수정</a>-->
-                    <a th:href="@{|/answer/delete/${answer.id}|}" class="delete-btn"
-                       onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-                       
-                </div>
-            </div>
-        </div>
+        
 
     </div>
 </section>

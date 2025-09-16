@@ -1,0 +1,194 @@
+@charset "UTF-8";
+
+/* ================================
+   전체 글 상세 페이지 스타일
+   ================================ */
+.board-detail-section {
+    padding: 40px 20px;
+    background-color: #FDF6F0; /* 부드러운 배경 */
+    min-height: 80vh;
+}
+
+.board-detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #FFF8F0;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 글 제목 및 메타 정보 */
+.board-header h2 {
+    font-size: 2rem;
+    color: #5C4033;
+    margin-bottom: 10px;
+}
+
+.board-meta {
+    font-size: 0.9rem;
+    color: #7C4D3B;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* 상품 이미지 갤러리 */
+.product-images {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+.product-images img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* 글 내용 */
+.board-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #3B2F2F;
+    margin-bottom: 20px;
+}
+
+/* 가격 / 위치 */
+.product-info {
+    display: flex;
+    gap: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.product-info .price {
+    color: #C05621;
+}
+
+.product-info .location {
+    color: #6B4226;
+}
+
+/* 버튼 그룹 */
+.board-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.board-actions button,
+.board-actions .list-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* 찜하기 버튼 */
+.vote-btn {
+    background-color: #FBBF24;
+    color: #3B2F2F;
+}
+
+.vote-btn:hover {
+    background-color: #FFD54F;
+}
+
+/* 예약 버튼 */
+.reserve-btn {
+    background-color: #6B4226;
+    color: #FFF8F0;
+}
+
+.reserve-btn:hover {
+    background-color: #5C3A1F;
+}
+
+/* 거래 완료 버튼 */
+.complete-btn {
+    background-color: #38A169;
+    color: #FFF8F0;
+}
+
+.complete-btn:hover {
+    background-color: #2F855A;
+}
+
+/* 목록 버튼 */
+.list-btn {
+    background-color: #E2E8F0;
+    color: #3B2F2F;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.list-btn:hover {
+    background-color: #CBD5E0;
+}
+
+/* 답변/문의 섹션 */
+.answer-form-section h3,
+.answer-list-section h3 {
+    margin-bottom: 10px;
+    color: #5C4033;
+}
+
+.answer-form-section textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #DADADA;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.submit-btn {
+    background-color: #FBBF24;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.submit-btn:hover {
+    background-color: #FFD54F;
+}
+
+/* 문의 카드 */
+.answer-card {
+    border-top: 1px solid #E2D8D0;
+    padding: 10px 0;
+}
+
+.answer-meta {
+    font-size: 0.85rem;
+    color: #7C4D3B;
+    margin-bottom: 5px;
+}
+
+.answer-content {
+    font-size: 0.95rem;
+    color: #3B2F2F;
+    margin-bottom: 5px;
+}
+
+.answer-actions a {
+    font-size: 0.85rem;
+    color: #C05621;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.answer-actions a:hover {
+    text-decoration: underline;
+}

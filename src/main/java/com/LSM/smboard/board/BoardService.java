@@ -53,27 +53,67 @@ public class BoardService {
 		
 	}
 	
-	// 페이징 + 검색
-    public Page<Board> getPageBoards(int page, String kw) {
-        int size = 10; // 한 페이지당 글 개수
-        int startRow = page * size;
-        int endRow = startRow + size;
+	// 페이징 + 검색 (field 구분)
+	public Page<Board> getPageBoards(int page, String field, String kw) {
+	    int size = 10;
+	    int startRow = page * size;
+	    int endRow = startRow + size;
 
-        List<Board> boardList;
-        long total;
+	    List<Board> boardList;
+	    long total;
 
-        if (kw == null || kw.isEmpty()) {
-            // 검색어 없으면 전체 게시글
-            boardList = boardRepository.findBoardsWithPaging(startRow, endRow);
-            total = boardRepository.count();
-        } else {
-            // 검색어 있는 경우
-            boardList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
-            total = boardRepository.countSearchResult(kw);
-        }
+	    if (kw == null || kw.isEmpty()) {
+	        boardList = boardRepository.findBoardsWithPaging(startRow, endRow);
+	        total = boardRepository.countAllBoards();
+	    } else {
+	        switch(field) {
+	            case "subject":
+	                boardList = boardRepository.searchBoardsBySubjectWithPaging(kw, startRow, endRow);
+	                total = boardRepository.countSearchBySubject(kw);
+	                break;
+	            case "content":
+	                boardList = boardRepository.searchBoardsByContentWithPaging(kw, startRow, endRow);
+	                total = boardRepository.countSearchByContent(kw);
+	                break;
+	            case "author":
+	                boardList = boardRepository.searchBoardsByAuthorWithPaging(kw, startRow, endRow);
+	                total = boardRepository.countSearchByAuthor(kw);
+	                break;
+	            default:
+	                boardList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
+	                total = boardRepository.countSearchResult(kw);
+	        }
+	    }
 
-        return new PageImpl<>(boardList, PageRequest.of(page, size), total);
-			}
+	    // page가 totalPages를 넘어갈 경우 마지막 페이지로 보정
+	    int totalPages = (int) Math.ceil((double) total / size);
+	    if(page >= totalPages && totalPages > 0) {
+	        page = totalPages - 1;
+	        startRow = page * size;
+	        endRow = startRow + size;
+	        // 재조회
+	        if (kw == null || kw.isEmpty()) {
+	            boardList = boardRepository.findBoardsWithPaging(startRow, endRow);
+	        } else {
+	            switch(field) {
+	                case "subject":
+	                    boardList = boardRepository.searchBoardsBySubjectWithPaging(kw, startRow, endRow);
+	                    break;
+	                case "content":
+	                    boardList = boardRepository.searchBoardsByContentWithPaging(kw, startRow, endRow);
+	                    break;
+	                case "author":
+	                    boardList = boardRepository.searchBoardsByAuthorWithPaging(kw, startRow, endRow);
+	                    break;
+	                default:
+	                    boardList = boardRepository.searchBoardsWithPaging(kw, startRow, endRow);
+	            }
+	        }
+	    }
+
+	    return new PageImpl<>(boardList, PageRequest.of(page, size), total);
+	}
+
 	public void modify(Board board,String subject, String content) {
 		
 		board.setContent(content);

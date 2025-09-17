@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -234,6 +236,24 @@ public class ReservationController {
 			
 					return String.format("redirect:/reservation/detail/%s", id);
 		}
+		
+//		@PreAuthorize("isAuthenticated()")
+//		@PostMapping("/request/{id}")
+//		@ResponseBody 
+//		public ResponseEntity<?> requestReservation(
+//		        @PathVariable("id") Integer id,
+//		        @RequestBody Map<String, String> payload,
+//		        @AuthenticationPrincipal UserDetails userDetails) {
+//
+//		    String date = payload.get("reserveDate");
+//		    String time = payload.get("reserveTime");
+//
+//		    // 여기서 예약 서비스 호출
+//		    reservationService.addRequest(id, date, time, userDetails.getUsername());
+//
+//		    return ResponseEntity.ok().build();
+//		}
+		
 		@PreAuthorize("isAuthenticated()")
 		@PostMapping("/request/{id}")
 		@ResponseBody 
@@ -242,14 +262,28 @@ public class ReservationController {
 		        @RequestBody Map<String, String> payload,
 		        @AuthenticationPrincipal UserDetails userDetails) {
 
-		    String date = payload.get("reserveDate");
-		    String time = payload.get("reserveTime");
+		    String dateStr = payload.get("reserveDate");
+		    String timeStr = payload.get("reserveTime");
 
-		    // 여기서 예약 서비스 호출
-		    reservationService.addRequest(id, date, time, userDetails.getUsername());
+		    // LocalDateTime 변환
+		    LocalDate reserveDate = LocalDate.parse(dateStr);
+		    LocalTime reserveTime = LocalTime.parse(timeStr);
+		    LocalDateTime reserveDateTime = LocalDateTime.of(reserveDate, reserveTime);
+
+		    // 현재 시간
+		    LocalDateTime now = LocalDateTime.now();
+
+		    // 과거 시간 예약 막기
+		    if (reserveDateTime.isBefore(now)) {
+		        return ResponseEntity.badRequest().body("지난 시간에는 예약할 수 없습니다.");
+		    }
+
+		    // 예약 서비스 호출
+		    reservationService.addRequest(id, dateStr, timeStr, userDetails.getUsername());
 
 		    return ResponseEntity.ok().build();
 		}
+		
 		@PreAuthorize("isAuthenticated()")
 		@GetMapping(value="/request/delete/{id}")
 		public String requestdelete(Principal principal,@PathVariable("id") Integer id) {

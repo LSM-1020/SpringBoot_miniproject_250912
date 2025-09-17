@@ -131,21 +131,26 @@ function saveReservation() {
 
     // 예약 버튼 data 속성에서 reservationId 가져오기
     const reservationBtn = document.getElementById('reserve-btn');
-    if (!reservationBtn) {
-        alert("예약할 수 없는 글입니다.");
-        return;
+if (!reservationBtn) {
+    alert("예약할 수 없는 글입니다.");
+    return;
+}
+const reservationId = reservationBtn.dataset.reservationId;
+
+fetch('/reservation/request/' + reservationId, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reserveDate: date, reserveTime: time })
+})
+.then(async res => {
+    if (res.ok) {
+        location.reload();
+    } else {
+        // 서버에서 보내준 메시지 읽기
+        const msg = await res.text();
+        alert(msg || "예약 요청에 실패했습니다.");
     }
-    const reservationId = reservationBtn.dataset.reservationId;
-
-    fetch('/reservation/request/' + reservationId, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reserveDate: date, reserveTime: time })
-    }).then(res => {
-        if (res.ok) location.reload();
-        else alert("예약 요청에 실패했습니다.");
-    });
-
+});
     closeModal();
 }
 </script>

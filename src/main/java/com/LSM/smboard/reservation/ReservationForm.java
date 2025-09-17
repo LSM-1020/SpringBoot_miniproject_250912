@@ -2,7 +2,7 @@ package com.LSM.smboard.reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+
 
 import org.springframework.web.multipart.MultipartFile;
 

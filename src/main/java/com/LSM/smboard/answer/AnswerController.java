@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.LSM.smboard.board.Board;
 import com.LSM.smboard.board.BoardService;
-import com.LSM.smboard.reservation.Reservation;
-import com.LSM.smboard.reservation.ReservationService;
+
 import com.LSM.smboard.user.SiteUser;
 import com.LSM.smboard.user.UserService;
 

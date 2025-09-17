@@ -3,8 +3,6 @@ package com.LSM.smboard.answer;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import org.springframework.data.annotation.CreatedDate;
-
 
 import com.LSM.smboard.board.Board;
 import com.LSM.smboard.reservation.Reservation;

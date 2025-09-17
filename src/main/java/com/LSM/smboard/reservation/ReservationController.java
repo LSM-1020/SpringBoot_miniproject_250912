@@ -1,16 +1,11 @@
 package com.LSM.smboard.reservation;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,7 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.LSM.smboard.answer.AnswerForm;
-import com.LSM.smboard.answer.AnswerService;
+
 import com.LSM.smboard.user.SiteUser;
 import com.LSM.smboard.user.UserService;
 
@@ -46,8 +41,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/reservation")
 public class ReservationController {
 
-		@Autowired
-		private AnswerService answerService;
 	
 		@Autowired
 		private ReservationService reservationService;
@@ -55,8 +48,6 @@ public class ReservationController {
 		@Autowired
 		private UserService userService;
 		
-		@Autowired
-		private ReservationRepository reservationRepository;
 		
 		@Autowired
 		private ReservationRequestRepository reservationRequestRepository;

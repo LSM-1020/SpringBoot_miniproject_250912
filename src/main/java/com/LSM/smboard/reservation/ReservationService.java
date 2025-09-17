@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.LSM.smboard.DataNotFoundException;
 import com.LSM.smboard.answer.Answer;
 import com.LSM.smboard.user.SiteUser;
+import com.LSM.smboard.user.UserRepository;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -37,12 +38,31 @@ import lombok.RequiredArgsConstructor;
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	
+	private final ReservationRequestRepository reservationRequestRepository;
+	
+	private final UserRepository userRepository;
+	
+	
 	//@requiredArgsconstructor에 의해 생성자 방식으로 주입된 questionRepository (final필드만 가능)
 	
 	public List<Reservation> getlist() {//모든 질문글 가져오기->페이징
 		return this.reservationRepository.findAll();
 	}
-	
+	public void addRequest(Integer reservationId, String date, String time, String username) {
+		Reservation reservation = reservationRepository.findById(reservationId)
+		        .orElseThrow(() -> new IllegalArgumentException("예약 글이 존재하지 않습니다."));
+
+        SiteUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        ReservationRequest request = new ReservationRequest();
+        request.setReservation(reservation);
+        request.setUser(user);
+        request.setReserveDate(LocalDate.parse(date));
+        request.setReserveTime(LocalTime.parse(time));
+
+        reservationRequestRepository.save(request);
+    }
 	public Reservation getBoard(Integer id) {
 		Optional<Reservation> bOptional = reservationRepository.findById(id);
 		if(bOptional.isPresent()) {
@@ -148,6 +168,8 @@ return reservationRepository.save(reservation);
 	public void delete(Reservation reservation) {
 		reservationRepository.delete(reservation);
 	}
+	
+	
 	
 	public void vote(Reservation reservation, SiteUser siteUser) { //업데이트문으로 만들어줘야함
 		reservation.getVoter().add(siteUser);

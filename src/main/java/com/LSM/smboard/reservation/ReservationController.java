@@ -9,12 +9,16 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,8 +26,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -49,6 +55,9 @@ public class ReservationController {
 		
 		@Autowired
 		private ReservationRepository reservationRepository;
+		
+		@Autowired
+		private ReservationRequestRepository reservationRequestRepository;
 		
 
 	    @GetMapping(value = "/detail/{id}") //파라미터이름 없이 값만 넘어왔을때 처리
@@ -225,6 +234,34 @@ public class ReservationController {
 			
 					return String.format("redirect:/reservation/detail/%s", id);
 		}
-		
+		@PreAuthorize("isAuthenticated()")
+		@PostMapping("/request/{id}")
+		@ResponseBody 
+		public ResponseEntity<?> requestReservation(
+		        @PathVariable("id") Integer id,
+		        @RequestBody Map<String, String> payload,
+		        @AuthenticationPrincipal UserDetails userDetails) {
+
+		    String date = payload.get("reserveDate");
+		    String time = payload.get("reserveTime");
+
+		    // 여기서 예약 서비스 호출
+		    reservationService.addRequest(id, date, time, userDetails.getUsername());
+
+		    return ResponseEntity.ok().build();
+		}
+		@PreAuthorize("isAuthenticated()")
+		@GetMapping(value="/request/delete/{id}")
+		public String requestdelete(Principal principal,@PathVariable("id") Integer id) {
+			
+			ReservationRequest request = reservationRequestRepository.findById(id).orElse(null);
+			//글쓴 유저와 로그인한 유저의 동일 여부 재확인
+					if(!request.getUser().getUsername().equals(principal.getName())) { //참이면 수정권한 없음
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제권한이 없습니다");
+					}
+					Integer reservationId = request.getReservation().getId();
+					reservationRequestRepository.delete(request);
+					return "redirect:/reservation/detail/" + reservationId;
+		}
 		
 	}

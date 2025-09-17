@@ -41,7 +41,7 @@
                     <th>번호</th>
                     <th>제목</th>
                     <th>작성자</th>
-                    <th>예약시간</th>
+                    <!-- <th>예약시간</th>-->
                     <th>조회수</th>
                     <th>작성일</th>
                 </tr>
@@ -69,8 +69,8 @@
                     <!-- 작성자 -->
                     <td th:text="${reservation.author.username}">작성자</td>
 
-                    <!-- 예약 시간 -->
-                    <td th:text="${reservation.reserveDate} + ' ' + ${reservation.reserveTime}">예약시간</td>
+                    <!-- 예약 시간
+                    <td th:text="${reservation.reserveDate} + ' ' + ${reservation.reserveTime}">예약시간</td>-->
 
                     <!-- 조회수 -->
                     <td th:text="${reservation.hit}">조회수</td>

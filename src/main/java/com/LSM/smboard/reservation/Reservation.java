@@ -85,11 +85,14 @@ public class Reservation {
 	//set-> 중복 제거용 컬랙션MultipartFile
 	
 	
+	
 	private Integer hit=0; //질문글 조회수
 	
 	// 날짜 필드 추가
     private LocalDate reserveDate;
     private LocalTime reserveTime;
+    
+   
     
     private int price; 
     
@@ -97,8 +100,13 @@ public class Reservation {
     
 
 	
-    private Integer completed; // 거래 완료 여부, 기본값 false
+    private Integer completed =0; // 거래 완료 여부, 기본값 false
     
+    private String status; // 예약 상태 (예: "대기", "승인", "거절")
+    private String contact; // 거래자 연락처
+    private String note;    // 예약 시 참고사항
     
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservationRequest> reservations = new ArrayList<>();
 }
 

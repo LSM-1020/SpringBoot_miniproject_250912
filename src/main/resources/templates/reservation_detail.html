@@ -5,7 +5,6 @@
     <title>상품 상세 - 동네마켓</title>
     <link rel="stylesheet" th:href="@{/css/board_detail_market.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script th:src="@{/js/reservation_vote.js}"></script>
 </head>
 <body>
 
@@ -25,59 +24,131 @@
             </div>
         </div>
 
-      
+        <!-- 글 내용 -->
         <div class="board-content">
-    <p th:text="${reservation.content}">상품 설명</p>
-    <p>가격: <span th:text="${reservation.price}+'원'">0원</span></p>
-    <p>거래 위치: <span th:text="${reservation.location}">서울</span></p>
-    <p>예약 일자: <span th:text="${reservation.reserveDate}+'-'+${reservation.reserveTime}">날짜</span></p>
-	</div>
+            <p th:text="${reservation.content}">상품 설명</p>
+            <p>가격: <span th:text="${reservation.price} + '원'">0원</span></p>
+            <p>거래 위치: <span th:text="${reservation.location}">서울</span></p>
+            <!--<p>예약 일자: <span th:text="${reservation.reserveDate} + ' ' + ${reservation.reserveTime}">날짜</span></p>-->
+        </div>
 
-      <!-- 찜하기 / 예약 관련 버튼 -->
-<div class="board-actions">
+        <!-- 글 액션 -->
+        <div class="board-actions">
+            <!-- 로그인한 사용자일 때 -->
+            <th:block th:if="${#authorization.expression('isAuthenticated()')}">
 
-    <!-- 로그인한 사용자일 때 -->
-    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                <!-- 찜하기 버튼 -->
+                <button class="vote-btn"
+                        th:onclick="'location.href=\'/reservation/vote/' + ${reservation.id} + '\';'">
+                    👍 좋아요 (<span th:text="${#lists.size(reservation.voter)}">0</span>)
+                </button>
 
-        <!-- 찜하기 버튼: 로그인한 누구에게나 표시 -->
-        <button class="vote-btn"
-                th:onclick="'location.href=\'/reservation/vote/'+${reservation.id}+'\''">
-            👍 찜하기 (<span th:text="${#lists.size(reservation.voter)}">0</span>)
-        </button>
+                <!-- 글 작성자 본인 제외: 거래 요청 버튼 -->
+                <th:block th:if="${#authentication.principal != null and reservation.author.username != #authentication.principal.username}">
+                    <button id="reserve-btn" class="request-btn" 
+                            th:data-reservation-id="${reservation.id}" 
+                            onclick="openModal()">
+                        📅 거래 요청
+                    </button>
+                </th:block>
 
-        <!-- 글 작성자 본인일 때만 표시 -->
-        <th:block th:if="${#authentication.principal != null and reservation.author.username == #authentication.principal.username}">
-            <button class="complete-btn"
-                    th:onclick="'location.href=\'/reservation/complete/'+${reservation.id}+'\''">
-                ✅ 거래 완료
-            </button>
+                <!-- 글 작성자 본인만 수정/삭제 -->
+                <th:block th:if="${#authentication.principal != null and reservation.author.username == #authentication.principal.username}">
+                    <button class="edit-btn"
+                            th:onclick="'location.href=\'/reservation/modify/' + ${reservation.id} + '\';'">
+                        ✏️ 수정하기
+                    </button>
 
-            <button class="edit-btn"
-                    th:onclick="'location.href=\'/reservation/modify/'+${reservation.id}+'\''">
-                ✏️ 수정하기
-            </button>
+                    <button class="delete-btn"
+                            th:onclick="'if(confirm(\'정말 삭제하시겠습니까?\')) location.href=\'/reservation/delete/' + ${reservation.id} + '\';'">
+                        🗑️ 삭제
+                    </button>
+                </th:block>
 
-            <button class="delete-btn"
-                    th:onclick="'if(confirm(\'정말 삭제하시겠습니까?\')) location.href=\'/reservation/delete/'+${reservation.id}+'\''">
-                🗑️ 삭제
-            </button>
-        </th:block>
+            </th:block>
 
-    </th:block>
+            <a th:href="@{/reservation/list}" class="list-btn">글 목록</a>
+        </div>
 
-    <!-- 글 목록 버튼 (모든 사용자 가능) -->
-    <a th:href="@{/reservation/list}" class="list-btn">글 목록</a>
+        <!-- 예약 모달 -->
+        <div id="modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <div class="modal-header">거래 요청</div>
+                <div class="modal-body">
+                    <label for="reserve-date">날짜 선택</label>
+                    <input type="date" id="reserve-date"/>
+                    <label for="reserve-time">시간 선택</label>
+                    <input type="time" id="reserve-time"/>
+                </div>
+                <div class="modal-actions">
+                    <button class="cancel-btn-modal" onclick="closeModal()">취소</button>
+                    <button class="save-btn" onclick="saveReservation()">확인</button>
+                </div>
+            </div>
+        </div>
+
+       <!-- 예약 요청 리스트 표시 -->
+<div class="reservation-list">
+    <h3>예약 요청 내역</h3>
+    <ul>
+        <li th:each="r : ${reservation.reservations}">
+            <span th:text="${r.user != null ? r.user.username : '탈퇴한 사용자'}">사용자</span> - 
+            <span th:text="${r.reserveDate} + ' ' + ${r.reserveTime}">날짜</span>
+
+            <!-- 로그인한 사용자 본인이 예약 요청 삭제 가능 -->
+            <th:block th:if="${#authentication.principal != null and r.user != null and r.user.username == #authentication.principal.username}">
+                <button class="delete-reservation-btn"
+                        th:onclick="'if(confirm(\'정말 예약 요청을 삭제하시겠습니까?\')) location.href=\'/reservation/request/delete/' + ${r.id} + '\';'">
+                    ❌ 삭제
+                </button>
+            </th:block>
+        </li>
+    </ul>
 </div>
-
-
-
-        
 
     </div>
 </section>
 
 <!-- Footer -->
 <div th:replace="/footer :: footer"></div>
+
+<script>
+function openModal() {
+    document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+}
+
+function saveReservation() {
+    const date = document.getElementById('reserve-date').value;
+    const time = document.getElementById('reserve-time').value;
+    if (!date || !time) {
+        alert("날짜와 시간을 모두 선택해주세요.");
+        return;
+    }
+
+    // 예약 버튼 data 속성에서 reservationId 가져오기
+    const reservationBtn = document.getElementById('reserve-btn');
+    if (!reservationBtn) {
+        alert("예약할 수 없는 글입니다.");
+        return;
+    }
+    const reservationId = reservationBtn.dataset.reservationId;
+
+    fetch('/reservation/request/' + reservationId, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reserveDate: date, reserveTime: time })
+    }).then(res => {
+        if (res.ok) location.reload();
+        else alert("예약 요청에 실패했습니다.");
+    });
+
+    closeModal();
+}
+</script>
 
 </body>
 </html>

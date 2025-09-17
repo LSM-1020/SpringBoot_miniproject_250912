@@ -67,18 +67,20 @@
         <h2 th:text="${reservation != null && reservation.id != null ? '글 수정하기' : '새 상품 글쓰기'}">글쓰기</h2>
 		
         <form th:object="${reservationForm}" 
-      th:action="${reservation.id != null} ? @{/reservation/modify/{id}(id=${reservation.id})} : @{/reservation/create}" 
+      th:action="${reservation != null and reservation.id != null} ? @{/reservation/modify/{id}(id=${reservation.id})} : @{/reservation/create}" 
       method="post" enctype="multipart/form-data">
             <!-- 제목 -->
             <div class="form-group">
                 <label for="subject">제목</label>
                 <input type="text" th:field="*{subject}" id="subject" placeholder="상품 이름 입력"/>
+                <div th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}" style="color:red"></div>
             </div>
 
             <!-- 내용 -->
             <div class="form-group">
                 <label for="content">내용</label>
                 <textarea th:field="*{content}" id="content" rows="5" placeholder="상품 설명"></textarea>
+                 <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="color:red"></div>
             </div>
 
            <!-- 가격 -->
@@ -93,18 +95,19 @@
             <div class="form-group">
                 <label for="location">거래 위치</label>
                 <input type="text" th:field="*{location}" id="location" placeholder="예: 서울 강남"/>
+                 <div th:if="${#fields.hasErrors('location')}" th:errors="*{location}" style="color:red"></div>
             </div>
 
            
 
-             <!-- 예약일 / 예약시간 -->
+             <!-- 예약일 / 예약시간
     <div class="form-group">
         <label for="reserve-date">예약일</label>
         <input type="date" th:field="*{reserveDate}" id="reserve-date" required/>
 
         <label for="reserve-time">예약시간</label>
         <input type="time" th:field="*{reserveTime}" id="reserve-time" required/>
-    </div>
+    </div> -->
 
             <!-- 제출 버튼 -->
             <div class="form-actions">

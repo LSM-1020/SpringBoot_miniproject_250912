@@ -34,7 +34,7 @@ public class ReservationForm {
 		private MultipartFile image;
 		
 		private int price;
-		
+		@NotEmpty(message = "장소는 필수 항목입니다") //공란으로 들어오면 작동
 		private String location;
 		
 	    private LocalDate reserveDate;  // 예약 날짜

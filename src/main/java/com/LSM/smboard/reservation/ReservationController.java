@@ -73,44 +73,48 @@ public class ReservationController {
 		}
 	    
 		@PreAuthorize("isAuthenticated()")
-		@GetMapping(value = "/create") //질문 등록 폼만 매핑해주는 메서드->GET
-		public String boardCreate(ReservationForm reservationForm, Model model) {
-			model.addAttribute("reservation",new Reservation());
-			return "reservation_form"; //질문 등록하는 폼 페이지 이름
+		@GetMapping("/create")
+		public String showCreateForm(Model model) {
+		    model.addAttribute("reservationForm", new ReservationForm()); // 폼 바인딩용
+		    model.addAttribute("reservation", null); // 새 글 작성이므로 null
+		    return "reservation_form";
 		}
 		
 		@PreAuthorize("isAuthenticated()")
 		@PostMapping("/create")
-	    public String createReservation(@ModelAttribute ReservationForm reservationForm, Principal principal, Model model) {
+	    public String createReservation(@Valid ReservationForm reservationForm,BindingResult bindingResult, Principal principal, Model model) {
 
-	        SiteUser author = userService.getUser(principal.getName());
+			if (bindingResult.hasErrors()) { // 유효성 체크에서 에러 발생
+		        return "reservation_form"; // 에러 발생 시 다시 입력 폼으로
+		    }
 
-	     // 이미지 파일명만 저장 (서버에 실제 저장하지 않음)
-	        String imagePath = null;
-	        MultipartFile imageFile = reservationForm.getImage();
-	        if (imageFile != null && !imageFile.isEmpty()) {
-	            String originalFilename = imageFile.getOriginalFilename();
-	            String uuid = UUID.randomUUID().toString();
-	            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-	            String savedFileName = uuid + extension;
+		    SiteUser author = userService.getUser(principal.getName());
 
-	            // DB에 저장할 경로만 생성
-	            imagePath = "/upload/" + savedFileName;
-	        }
+		    // 이미지 파일명만 저장 (서버에 실제 저장하지 않음)
+		    String imagePath = null;
+		    MultipartFile imageFile = reservationForm.getImage();
+		    if (imageFile != null && !imageFile.isEmpty()) {
+		        String originalFilename = imageFile.getOriginalFilename();
+		        String uuid = UUID.randomUUID().toString();
+		        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+		        String savedFileName = uuid + extension;
 
-	        reservationService.create(
-	                reservationForm.getSubject(),
-	                reservationForm.getContent(),
-	                author,
-	                reservationForm.getReserveDate(),
-	                reservationForm.getReserveTime(),
-	              
-	                reservationForm.getPrice(),
-	                reservationForm.getLocation()
-	        );
+		        // DB에 저장할 경로만 생성
+		        imagePath = "/upload/" + savedFileName;
+		    }
 
-	        return "redirect:/reservation/list";
-	    }
+		    reservationService.create(
+		            reservationForm.getSubject(),
+		            reservationForm.getContent(),
+		            author,
+		            reservationForm.getReserveDate(),
+		            reservationForm.getReserveTime(),
+		            reservationForm.getPrice(),
+		            reservationForm.getLocation()
+		    );
+
+		    return "redirect:/reservation/list";
+		}
 		@GetMapping("/list")
 		public String list(@RequestParam(value="page", defaultValue="0") int page,
 		                   @RequestParam(value="field", required=false) String field,
